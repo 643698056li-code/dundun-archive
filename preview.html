@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DUNDUN ARCHIVE</title>
+<style>
+:root{
+ --bg:#f7f8fa;
+ --card:#ffffff;
+ --text:#111827;
+ --muted:#6b7280;
+ --border:#e5e7eb;
+}
+*{box-sizing:border-box}
+body{
+ margin:0;
+ font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+ background:var(--bg);
+ color:var(--text);
+ line-height:1.7;
+}
+.hero{
+ min-height:100vh;
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ text-align:center;
+ padding:40px;
+ background:linear-gradient(180deg,#fff,#f3f4f6);
+}
+.hero h1{
+ font-size:clamp(3rem,8vw,7rem);
+ margin:0;
+ letter-spacing:4px;
+}
+.hero p{
+ color:var(--muted);
+ max-width:700px;
+ margin:auto;
+}
+.btn{
+ display:inline-block;
+ margin-top:20px;
+ padding:14px 28px;
+ border-radius:999px;
+ border:1px solid var(--border);
+ background:white;
+ text-decoration:none;
+ color:black;
+}
+.container{max-width:1200px;margin:auto;padding:80px 24px;}
+.section-title{
+ font-size:2rem;
+ margin-bottom:20px;
+}
+.grid{
+ display:grid;
+ grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+ gap:20px;
+}
+.card{
+ background:var(--card);
+ border:1px solid var(--border);
+ border-radius:20px;
+ padding:24px;
+ box-shadow:0 10px 30px rgba(0,0,0,.04);
+}
+.timeline{
+ border-left:2px solid var(--border);
+ margin-left:10px;
+}
+.event{
+ padding-left:25px;
+ margin:30px 0;
+ position:relative;
+}
+.event::before{
+ content:"";
+ width:12px;height:12px;
+ border-radius:50%;
+ background:#111;
+ position:absolute;
+ left:-7px;top:10px;
+}
+.gallery{
+ display:grid;
+ grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+ gap:18px;
+}
+.gallery img{
+ width:100%;
+ aspect-ratio:1/1;
+ object-fit:cover;
+ border-radius:16px;
+}
+.stats{
+ display:grid;
+ grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+ gap:20px;
+}
+.stat{
+ background:white;
+ border-radius:20px;
+ padding:25px;
+ border:1px solid var(--border);
+}
+.stat .num{
+ font-size:2rem;
+ font-weight:700;
+}
+footer{
+ text-align:center;
+ padding:60px 20px;
+ color:var(--muted);
+}
+</style>
+</head>
+<body>
+
+<section class="hero">
+<div>
+<h1>DUNDUN</h1>
+<h2>ARCHIVE</h2>
+<p>
+A Digital Museum of a Welsh Corgi.<br>
+长期跟踪记录一只柯基关于吃饭、睡觉、散步与拖鞋结构研究的全过程。
+</p>
+<a href="#profile" class="btn">进入档案馆</a>
+</div>
+</section>
+
+<div class="container" id="profile">
+<h2 class="section-title">基础档案</h2>
+<div class="grid">
+<div class="card"><b>姓名</b><br>墩墩</div>
+<div class="card"><b>品种</b><br>威尔士柯基</div>
+<div class="card"><b>体重</b><br>14斤</div>
+<div class="card"><b>疫苗</b><br>四联已完成</div>
+</div>
+</div>
+
+<div class="container">
+<h2 class="section-title">成长时间轴</h2>
+<div class="timeline">
+<div class="event">
+<h3>2024 · 来到新家</h3>
+<p>项目正式启动，研究对象进入长期观测阶段。</p>
+</div>
+<div class="event">
+<h3>2025 · 体重持续增长</h3>
+<p>零食摄入效率显著提升。</p>
+</div>
+<div class="event">
+<h3>2026 · 拖鞋事件</h3>
+<p>现场证据充足，但嫌疑犬拒绝配合调查。</p>
+</div>
+</div>
+</div>
+
+<div class="container">
+<h2 class="section-title">照片墙</h2>
+<div class="gallery">
+<img src="https://placehold.co/800x800?text=Dundun+01">
+<img src="https://placehold.co/800x800?text=Dundun+02">
+<img src="https://placehold.co/800x800?text=Dundun+03">
+<img src="https://placehold.co/800x800?text=Dundun+04">
+<img src="https://placehold.co/800x800?text=Dundun+05">
+<img src="https://placehold.co/800x800?text=Dundun+06">
+</div>
+</div>
+
+<div class="container">
+<h2 class="section-title">研究成果</h2>
+<div class="stats">
+<div class="stat"><div class="num">99.8%</div>零食感知能力</div>
+<div class="stat"><div class="num">100%</div>午睡成功率</div>
+<div class="stat"><div class="num">★★★★★</div>拆家指数</div>
+<div class="stat"><div class="num">24h</div>萌度在线</div>
+</div>
+</div>
+
+<footer>
+DUNDUN ARCHIVE<br>
+Version 1.0 · Ready for Cloudflare Pages
+</footer>
+
+</body>
+</html>
