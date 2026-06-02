@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width,initial-scale=1">
+
+<title>DUNDUN CMS</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+
+body{
+
+    font-family:
+    -apple-system,
+    BlinkMacSystemFont,
+    sans-serif;
+
+    background:#f5f5f7;
+
+    max-width:1000px;
+
+    margin:auto;
+
+    padding:40px;
+}
+
+.card{
+
+    background:white;
+
+    padding:30px;
+
+    border-radius:20px;
+
+    margin-bottom:30px;
+}
+
+input,
+textarea{
+
+    width:100%;
+
+    padding:12px;
+
+    margin-top:10px;
+
+    margin-bottom:15px;
+}
+
+button{
+
+    background:black;
+
+    color:white;
+
+    border:none;
+
+    padding:12px 24px;
+
+    border-radius:10px;
+
+    cursor:pointer;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h1>
+DUNDUN CMS
+</h1>
+
+<div class="card">
+
+<h2>
+上传照片
+</h2>
+
+<input
+id="photoTitle"
+placeholder="照片标题">
+
+<input
+id="photoFile"
+type="file">
+
+<button onclick="uploadPhoto()">
+
+上传照片
+
+</button>
+
+</div>
+
+<div class="card">
+
+<h2>
+新增时间轴
+</h2>
+
+<input
+id="eventTitle"
+placeholder="事件标题">
+
+<input
+id="eventDate"
+type="date">
+
+<textarea
+id="eventContent"
+placeholder="事件内容">
+</textarea>
+
+<button onclick="addTimeline()">
+
+发布事件
+
+</button>
+
+</div>
+
+<script src="js/config.js"></script>
+<script src="js/admin.js"></script>
+
+</body>
+</html>
