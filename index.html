@@ -326,27 +326,9 @@ color:#86868b;
 
 /* ================= MOBILE ================= */
 
-@media(max-width:900px){
+/* ================= MOBILE ================= */
 
-.gallery{
-column-count:2;
-}
-
-.hero h1{
-font-size:72px;
-}
-
-.section-title{
-font-size:42px;
-}
-
-}
-
-@media(max-width:600px){
-
-.gallery{
-column-count:1;
-}
+@media(max-width:768px){
 
 .hero h1{
 font-size:52px;
@@ -360,8 +342,46 @@ font-size:20px;
 font-size:34px;
 }
 
+/* 手机端横向滑动 */
+
+.gallery{
+
+display:flex;
+
+overflow-x:auto;
+
+gap:20px;
+
+padding-bottom:10px;
+
+scroll-snap-type:x mandatory;
+
+-webkit-overflow-scrolling:touch;
 }
 
+.gallery::-webkit-scrollbar{
+display:none;
+}
+
+.card{
+
+min-width:88vw;
+
+max-width:88vw;
+
+margin-bottom:0;
+
+scroll-snap-align:center;
+}
+
+.card img{
+
+height:60vh;
+
+object-fit:cover;
+}
+
+}
 </style>
 
 </head>
