@@ -1,25 +1,44 @@
 async function loadPhotos() {
 
-    const { data, error } = await supabaseClient
-        .from('photos')
-        .select('*')
-        .order('id', { ascending: false });
+    const { data, error } =
+    await supabaseClient
+    .from("photos")
+    .select("*")
+    .order("id", {
+        ascending:false
+    });
 
-    if (error) {
+    if(error){
+
         console.error(error);
+
         return;
     }
 
-    const gallery = document.getElementById('gallery');
+    document
+    .getElementById("photoCount")
+    .innerText=data.length;
 
-    gallery.innerHTML = '';
+    const gallery =
+    document.getElementById("gallery");
 
-    data.forEach(photo => {
+    gallery.innerHTML="";
+
+    data.forEach(photo=>{
 
         gallery.innerHTML += `
         <div class="card">
+
             <img src="${photo.image_url}">
-            <h3>${photo.title || ''}</h3>
+
+            <div class="card-content">
+
+                <h3>
+                    ${photo.title || ""}
+                </h3>
+
+            </div>
+
         </div>
         `;
 
@@ -27,30 +46,59 @@ async function loadPhotos() {
 
 }
 
+
 async function loadTimeline() {
 
-    const { data, error } = await supabaseClient
-        .from('timeline')
-        .select('*')
-        .order('event_date', { ascending: false });
+    const { data, error } =
+    await supabaseClient
+    .from("timeline")
+    .select("*")
+    .order("event_date",{
+        ascending:false
+    });
 
-    if (error) {
+    if(error){
+
         console.error(error);
+
         return;
     }
 
-    const timeline = document.getElementById('timeline');
+    document
+    .getElementById("timelineCount")
+    .innerText=data.length;
 
-    timeline.innerHTML = '';
+    const timeline =
+    document.getElementById("timeline");
 
-    data.forEach(item => {
+    timeline.innerHTML="";
+
+    data.forEach(item=>{
 
         timeline.innerHTML += `
+
         <div class="timeline-item">
-            <h3>${item.title}</h3>
-            <p>${item.event_date || ''}</p>
-            <p>${item.content || ''}</p>
+
+            <div class="timeline-date">
+
+                ${item.event_date}
+
+            </div>
+
+            <h3>
+
+                ${item.title}
+
+            </h3>
+
+            <p>
+
+                ${item.content || ""}
+
+            </p>
+
         </div>
+
         `;
 
     });
@@ -58,4 +106,5 @@ async function loadTimeline() {
 }
 
 loadPhotos();
+
 loadTimeline();
