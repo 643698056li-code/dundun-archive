@@ -209,9 +209,15 @@ color:#6e6e73;
 
 .gallery{
 
-column-count:3;
+display:grid;
 
-column-gap:30px;
+grid-template-columns:
+repeat(
+auto-fit,
+minmax(350px,1fr)
+);
+
+gap:30px;
 }
 
 .card{
