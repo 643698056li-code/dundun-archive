@@ -4,141 +4,242 @@
 <head>
 
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
-<meta name="viewport"
-content="width=device-width,initial-scale=1">
-
-<title>DUNDUN ARCHIVE</title>
+<title>DUNDUN DIGITAL MUSEUM</title>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
 <style>
 
+:root{
+
+--bg:#f8f6f2;
+--card:#ffffff;
+--text:#111111;
+--sub:#777777;
+--border:#e6e3dc;
+
+}
+
 *{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
+margin:0;
+padding:0;
+box-sizing:border-box;
 }
 
 body{
-    font-family:
-    -apple-system,
-    BlinkMacSystemFont,
-    sans-serif;
 
-    background:#f5f5f7;
+background:var(--bg);
+
+font-family:'Inter',sans-serif;
+
+color:var(--text);
+
+line-height:1.7;
 }
 
 .hero{
 
-    height:60vh;
+height:100vh;
 
-    display:flex;
+display:flex;
 
-    flex-direction:column;
+justify-content:center;
 
-    justify-content:center;
+align-items:center;
 
-    align-items:center;
+flex-direction:column;
 
-    background:white;
+text-align:center;
+
+padding:30px;
 }
 
 .hero h1{
 
-    font-size:4rem;
+font-size:clamp(4rem,10vw,8rem);
 
-    margin-bottom:20px;
+font-family:'Playfair Display',serif;
+
+letter-spacing:4px;
+
+margin-bottom:20px;
 }
 
 .hero p{
 
-    color:#666;
+font-size:1.1rem;
+
+color:var(--sub);
+}
+
+.scroll-tip{
+
+margin-top:40px;
+
+color:#999;
+
+font-size:.9rem;
+}
+
+.container{
+
+max-width:1400px;
+
+margin:auto;
+
+padding:80px 40px;
 }
 
 .section-title{
 
-    padding:40px 30px 20px;
+font-size:2.2rem;
 
-    font-size:2rem;
+font-family:'Playfair Display';
+
+margin-bottom:50px;
+}
+
+.stats{
+
+display:grid;
+
+grid-template-columns:
+repeat(auto-fit,minmax(250px,1fr));
+
+gap:30px;
+
+margin-bottom:120px;
+}
+
+.stat-card{
+
+background:white;
+
+padding:40px;
+
+border-radius:24px;
+
+box-shadow:
+0 10px 30px rgba(0,0,0,.04);
+}
+
+.stat-number{
+
+font-size:3rem;
+
+font-weight:700;
+}
+
+.stat-label{
+
+color:var(--sub);
 }
 
 .gallery{
 
-    display:grid;
+column-count:3;
 
-    grid-template-columns:
-    repeat(auto-fill,minmax(300px,1fr));
-
-    gap:20px;
-
-    padding:30px;
+column-gap:25px;
 }
 
 .card{
 
-    background:white;
+background:white;
 
-    border-radius:15px;
+margin-bottom:25px;
 
-    overflow:hidden;
+border-radius:20px;
 
-    box-shadow:
-    0 5px 20px rgba(0,0,0,0.05);
+overflow:hidden;
+
+break-inside:avoid;
+
+box-shadow:
+0 10px 30px rgba(0,0,0,.04);
 }
 
 .card img{
 
-    width:100%;
+width:100%;
 
-    height:300px;
+display:block;
+}
 
-    object-fit:cover;
+.card-content{
+
+padding:20px;
 }
 
 .card h3{
 
-    padding:15px;
+font-size:1rem;
 }
 
 .timeline{
 
-    padding:30px;
+max-width:900px;
 }
 
 .timeline-item{
 
-    background:white;
+padding:30px;
 
-    border-radius:15px;
+margin-bottom:30px;
 
-    padding:20px;
+background:white;
 
-    margin-bottom:20px;
+border-radius:20px;
 
-    box-shadow:
-    0 5px 20px rgba(0,0,0,0.05);
+box-shadow:
+0 10px 30px rgba(0,0,0,.04);
 }
 
-.timeline-item h3{
+.timeline-date{
 
-    margin-bottom:10px;
-}
+font-size:.9rem;
 
-.timeline-item .date{
+color:#888;
 
-    color:#888;
-
-    margin-bottom:10px;
+margin-bottom:10px;
 }
 
 footer{
 
-    text-align:center;
+padding:120px 30px;
 
-    padding:50px;
+text-align:center;
 
-    color:#999;
+color:#999;
+}
+
+@media(max-width:900px){
+
+.gallery{
+
+column-count:2;
+}
+
+}
+
+@media(max-width:600px){
+
+.gallery{
+
+column-count:1;
+}
+
+.hero h1{
+
+font-size:4rem;
+}
+
 }
 
 </style>
@@ -149,16 +250,92 @@ footer{
 
 <section class="hero">
 
-<h1>DUNDUN ARCHIVE</h1>
+<h1>DUNDUN</h1>
 
 <p>
-A Digital Museum of Dundun
+A Living Archive
 </p>
+
+<div class="scroll-tip">
+
+SCROLL ↓
+
+</div>
 
 </section>
 
+<div class="container">
+
+<section>
+
 <h2 class="section-title">
-📷 照片墙
+
+Archive Statistics
+
+</h2>
+
+<div class="stats">
+
+<div class="stat-card">
+
+<div id="photoCount"
+class="stat-number">
+
+0
+
+</div>
+
+<div class="stat-label">
+
+Photos
+
+</div>
+
+</div>
+
+<div class="stat-card">
+
+<div id="timelineCount"
+class="stat-number">
+
+0
+
+</div>
+
+<div class="stat-label">
+
+Events
+
+</div>
+
+</div>
+
+<div class="stat-card">
+
+<div class="stat-number">
+
+2026
+
+</div>
+
+<div class="stat-label">
+
+Museum Established
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<section>
+
+<h2 class="section-title">
+
+Photo Archive
+
 </h2>
 
 <div
@@ -166,8 +343,16 @@ id="gallery"
 class="gallery">
 </div>
 
+</section>
+
+<br><br><br>
+
+<section>
+
 <h2 class="section-title">
-📖 成长时间轴
+
+Life Timeline
+
 </h2>
 
 <div
@@ -175,14 +360,17 @@ id="timeline"
 class="timeline">
 </div>
 
+</section>
+
+</div>
+
 <footer>
 
-DUNDUN ARCHIVE © 2026
+DUNDUN DIGITAL MUSEUM
 
 </footer>
 
 <script src="js/config.js"></script>
-
 <script src="js/app.js"></script>
 
 </body>
