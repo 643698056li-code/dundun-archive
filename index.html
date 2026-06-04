@@ -545,6 +545,7 @@ font-size:34px;
 }
 
 .showcase-card{
+width:100%;
 height:auto;
 min-height:580px;
 border-radius:28px;
@@ -552,8 +553,13 @@ border-radius:28px;
 
 .card-content{
 flex-direction:column;
-padding:70px 28px 30px;
+padding:70px 28px 80px;
 gap:20px;
+}
+
+.card-info{
+position:relative;
+z-index:1;
 }
 
 .card-info h2{
@@ -573,10 +579,13 @@ padding-top:20px;
 .card-image{
 flex:1;
 padding:10px 20px 20px;
+width:100%;
 }
 
 .card-image img{
-max-height:280px;
+max-height:320px;
+width:100%;
+object-fit:contain;
 }
 
 .carousel-nav{
@@ -599,6 +608,7 @@ margin-top:25px;
 .autoplay-controls{
 bottom:16px;
 right:16px;
+z-index:20;
 }
 
 .autoplay-btn{
