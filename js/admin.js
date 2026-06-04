@@ -182,6 +182,38 @@ async function updateStats() {
     alert("保存成功");
 }
 
+async function addWeightRecord() {
+    const weight = document.getElementById("weightInput").value;
+    const date = document.getElementById("weightDate").value;
+    const note = document.getElementById("weightNote").value;
+
+    if (!weight) {
+        alert("请输入体重");
+        return;
+    }
+
+    const { error } = await supabaseClient
+        .from("weight_history")
+        .insert([
+            {
+                weight: weight,
+                recorded_at: date || new Date().toISOString().split('T')[0],
+                note: note || null
+            }
+        ]);
+
+    if (error) {
+        console.error(error);
+        alert(error.message);
+        return;
+    }
+
+    alert("记录成功");
+    document.getElementById("weightInput").value = "";
+    document.getElementById("weightDate").value = "";
+    document.getElementById("weightNote").value = "";
+}
+
 window.addEventListener("DOMContentLoaded", () => {
     loadStatsForAdmin();
 });

@@ -244,6 +244,135 @@ font-weight:400;
 letter-spacing:0.5px;
 }
 
+/* ================= WEIGHT TREND CHART ================= */
+
+.weight-trend-section{
+    padding:100px 30px;
+}
+
+.weight-chart-container{
+    background:white;
+    border-radius:28px;
+    padding:48px;
+    max-width:1000px;
+    margin:0 auto;
+    box-shadow:0 4px 30px rgba(0,0,0,0.05);
+}
+
+.chart-header{
+    margin-bottom:40px;
+}
+
+.chart-summary{
+    display:flex;
+    align-items:center;
+    gap:48px;
+}
+
+.current-weight{
+    display:flex;
+    flex-direction:column;
+}
+
+.weight-value{
+    font-size:64px;
+    font-weight:700;
+    letter-spacing:-2px;
+    color:#1d1d1f;
+}
+
+.weight-unit{
+    font-size:28px;
+    font-weight:400;
+    color:#6e6e73;
+    margin-left:4px;
+}
+
+.weight-label{
+    font-size:17px;
+    color:#86868b;
+    margin-top:8px;
+}
+
+.weight-change{
+    display:flex;
+    flex-direction:column;
+    padding:16px 24px;
+    background:linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+    border-radius:20px;
+}
+
+.change-value{
+    font-size:24px;
+    font-weight:600;
+    color:white;
+}
+
+.change-value.positive{
+    color:white;
+}
+
+.change-value.negative{
+    color:#ff6b6b;
+}
+
+.change-label{
+    font-size:13px;
+    color:rgba(255,255,255,0.8);
+    margin-top:4px;
+}
+
+.chart-area{
+    position:relative;
+    height:200px;
+}
+
+#weightChart{
+    width:100%;
+    height:100%;
+}
+
+.chart-grid{
+    position:absolute;
+    top:0;
+    left:0;
+    right:0;
+    bottom:30px;
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+    pointer-events:none;
+}
+
+.grid-line{
+    height:1px;
+    background:#f0f0f0;
+    position:relative;
+}
+
+.grid-line span{
+    position:absolute;
+    left:-30px;
+    top:-8px;
+    font-size:12px;
+    color:#86868b;
+}
+
+.chart-x-axis{
+    position:absolute;
+    bottom:0;
+    left:0;
+    right:0;
+    height:30px;
+    display:flex;
+    justify-content:space-between;
+}
+
+.chart-x-axis span{
+    font-size:12px;
+    color:#86868b;
+}
+
 /* ================= CAROUSEL ================= */
 
 .carousel-section{
@@ -812,6 +941,50 @@ Archive Statistics
 
 </div>
 
+</section>
+
+<section class="section weight-trend-section">
+<h2 class="section-title">Weight Trend</h2>
+<p class="section-desc">体重变化趋势</p>
+
+<div class="weight-chart-container">
+    <div class="chart-header">
+        <div class="chart-summary">
+            <div class="current-weight">
+                <span class="weight-value"><span id="currentWeight">14</span><span class="weight-unit">kg</span></span>
+                <span class="weight-label">当前体重</span>
+            </div>
+            <div class="weight-change">
+                <span class="change-value positive">+0.5kg</span>
+                <span class="change-label">本月</span>
+            </div>
+        </div>
+    </div>
+    
+    <div class="chart-area">
+        <svg id="weightChart" viewBox="0 0 800 200" preserveAspectRatio="none"></svg>
+        <div class="chart-grid">
+            <div class="grid-line"><span>15</span></div>
+            <div class="grid-line"><span>14</span></div>
+            <div class="grid-line"><span>13</span></div>
+            <div class="grid-line"><span>12</span></div>
+        </div>
+        <div class="chart-x-axis">
+            <span>Jan</span>
+            <span>Feb</span>
+            <span>Mar</span>
+            <span>Apr</span>
+            <span>May</span>
+            <span>Jun</span>
+            <span>Jul</span>
+            <span>Aug</span>
+            <span>Sep</span>
+            <span>Oct</span>
+            <span>Nov</span>
+            <span>Dec</span>
+        </div>
+    </div>
+</div>
 </section>
 
 <section class="section">
