@@ -6,48 +6,46 @@ await supabaseClient
 .from("photos")
 .select("*")
 .order("id", {
-    ascending:false
+    ascending: false
 });
 
-if(error){
-
+if (error) {
     console.error(error);
     return;
 }
 
-document
-.getElementById("photoCount")
-.innerText = data.length;
+const photoCount =
+document.getElementById("photoCount");
+
+if (photoCount) {
+    photoCount.innerText = data.length;
+}
 
 const gallery =
 document.getElementById("gallery");
 
+if (!gallery) return;
+
 gallery.innerHTML = "";
 
-data.forEach((photo,index)=>{
+data.forEach((photo) => {
 
     gallery.innerHTML += `
 
     <div class="showcase-card">
 
         <div class="card-badge">
-
             精选
-
         </div>
 
         <div class="card-info">
 
             <h2>
-
                 ${photo.title || "墩墩"}
-
             </h2>
 
             <p>
-
                 Dundun Digital Museum Collection
-
             </p>
 
         </div>
@@ -56,7 +54,7 @@ data.forEach((photo,index)=>{
 
             <img
                 src="${photo.image_url}"
-                alt="${photo.title || ""}"
+                alt="${photo.title || "Dundun"}"
             >
 
         </div>
@@ -64,71 +62,75 @@ data.forEach((photo,index)=>{
     </div>
 
     `;
-
 });
 
 createDots(data.length);
 
-setupCarousel();
+setTimeout(() => {
+    setupCarousel();
+}, 100);
 ```
 
 }
 
-function createDots(count){
+function createDots(count) {
 
 ```
-const dots =
+const dotsContainer =
 document.getElementById("galleryDots");
 
-if(!dots) return;
+if (!dotsContainer) return;
 
-dots.innerHTML = "";
+dotsContainer.innerHTML = "";
 
-for(let i=0;i<count;i++){
+for (let i = 0; i < count; i++) {
 
-    dots.innerHTML += `
-    <span class="dot ${i===0 ? "active" : ""}"></span>
+    const activeClass =
+    i === 0 ? "active" : "";
+
+    dotsContainer.innerHTML += `
+    <span class="dot ${activeClass}"></span>
     `;
 }
 ```
 
 }
 
-function setupCarousel(){
+function setupCarousel() {
 
 ```
 const gallery =
 document.getElementById("gallery");
 
-const dots =
-document.querySelectorAll(".dot");
+if (!gallery) return;
 
-if(!gallery || !dots.length) return;
+const cards =
+gallery.querySelectorAll(".showcase-card");
 
-gallery.addEventListener("scroll",()=>{
+if (!cards.length) return;
+
+gallery.addEventListener("scroll", () => {
 
     const cardWidth =
-    gallery.querySelector(".showcase-card")
-    ?.offsetWidth || 1;
+    cards[0].offsetWidth;
+
+    const gap = 28;
 
     const index =
     Math.round(
         gallery.scrollLeft /
-        (cardWidth + 28)
+        (cardWidth + gap)
     );
 
-    dots.forEach(dot=>{
+    const dots =
+    document.querySelectorAll(".dot");
 
+    dots.forEach(dot => {
         dot.classList.remove("active");
-
     });
 
-    if(dots[index]){
-
-        dots[index]
-        .classList
-        .add("active");
-
+    if (dots[index]) {
+        dots[index].classList.add("active");
     }
 
 });
@@ -143,26 +145,30 @@ const { data, error } =
 await supabaseClient
 .from("timeline")
 .select("*")
-.order("event_date",{
-    ascending:false
+.order("event_date", {
+    ascending: false
 });
 
-if(error){
-
+if (error) {
     console.error(error);
     return;
 }
 
-document
-.getElementById("timelineCount")
-.innerText = data.length;
+const timelineCount =
+document.getElementById("timelineCount");
+
+if (timelineCount) {
+    timelineCount.innerText = data.length;
+}
 
 const timeline =
 document.getElementById("timeline");
 
+if (!timeline) return;
+
 timeline.innerHTML = "";
 
-data.forEach(item=>{
+data.forEach((item) => {
 
     timeline.innerHTML += `
 
@@ -189,11 +195,17 @@ data.forEach(item=>{
     </div>
 
     `;
-
 });
 ```
 
 }
 
+window.addEventListener("DOMContentLoaded", () => {
+
+```
 loadPhotos();
+
 loadTimeline();
+```
+
+});
