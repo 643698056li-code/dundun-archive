@@ -92,11 +92,22 @@ placeholder="照片标题">
 id="photoFile"
 type="file">
 
+<input
+id="photoDescription"
+placeholder="照片描述（可选，AI可自动生成）">
+
+<button onclick="generateCaptionWithAI()">🤖 AI生成文案</button>
+
 <button onclick="uploadPhoto()">
 
 上传照片
 
 </button>
+
+<div id="aiResult" style="display:none; margin-top:20px; padding:15px; background:#f8f9fa; border-radius:10px;">
+    <strong>AI生成结果：</strong><br>
+    <span id="generatedCaption"></span>
+</div>
 
 </div>
 
@@ -190,6 +201,7 @@ placeholder="备注（可选）">
 </div>
 
 <script src="js/config.js"></script>
+<script src="js/ai.js"></script>
 <script src="js/admin.js"></script>
 
 </body>

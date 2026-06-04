@@ -214,6 +214,48 @@ async function addWeightRecord() {
     document.getElementById("weightNote").value = "";
 }
 
+async function generateCaptionWithAI() {
+    const fileInput = document.getElementById("photoFile");
+    const file = fileInput.files ? fileInput.files[0] : null;
+    
+    if (!file) {
+        alert("请先选择一张图片");
+        return;
+    }
+
+    const aiResultDiv = document.getElementById("aiResult");
+    const generatedCaptionSpan = document.getElementById("generatedCaption");
+    
+    aiResultDiv.style.display = "block";
+    generatedCaptionSpan.innerHTML = "🤖 AI正在分析图片...";
+
+    try {
+        const reader = new FileReader();
+        
+        reader.onload = async (e) => {
+            const base64 = e.target.result.split(',')[1];
+            const result = await generateCaption(base64);
+            
+            generatedCaptionSpan.innerHTML = `<p><strong>关键词：</strong>${result.keywords.join('、')}</p><p><strong>文案：</strong>${result.caption}</p>`;
+            
+            const descriptionInput = document.getElementById("photoDescription");
+            if (descriptionInput && !descriptionInput.value) {
+                descriptionInput.value = result.caption;
+            }
+        };
+        
+        reader.onerror = () => {
+            generatedCaptionSpan.innerHTML = "图片读取失败，请重试";
+        };
+        
+        reader.readAsDataURL(file);
+        
+    } catch (error) {
+        console.error('AI生成失败:', error);
+        generatedCaptionSpan.innerHTML = `生成失败：${error.message}`;
+    }
+}
+
 window.addEventListener("DOMContentLoaded", () => {
     loadStatsForAdmin();
 });
