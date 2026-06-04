@@ -1,110 +1,199 @@
 async function loadPhotos() {
 
-    const { data, error } =
-    await supabaseClient
-    .from("photos")
-    .select("*")
-    .order("id", {
-        ascending:false
-    });
+```
+const { data, error } =
+await supabaseClient
+.from("photos")
+.select("*")
+.order("id", {
+    ascending:false
+});
 
-    if(error){
+if(error){
 
-        console.error(error);
-
-        return;
-    }
-
-    document
-    .getElementById("photoCount")
-    .innerText=data.length;
-
-    const gallery =
-    document.getElementById("gallery");
-
-    gallery.innerHTML="";
-
-    data.forEach(photo=>{
-
-        gallery.innerHTML += `
-        <div class="card">
-
-            <img src="${photo.image_url}">
-
-            <div class="card-content">
-
-                <h3>
-                    ${photo.title || ""}
-                </h3>
-
-            </div>
-
-        </div>
-        `;
-
-    });
-
+    console.error(error);
+    return;
 }
 
+document
+.getElementById("photoCount")
+.innerText = data.length;
 
-async function loadTimeline() {
+const gallery =
+document.getElementById("gallery");
 
-    const { data, error } =
-    await supabaseClient
-    .from("timeline")
-    .select("*")
-    .order("event_date",{
-        ascending:false
-    });
+gallery.innerHTML = "";
 
-    if(error){
+data.forEach((photo,index)=>{
 
-        console.error(error);
+    gallery.innerHTML += `
 
-        return;
-    }
+    <div class="showcase-card">
 
-    document
-    .getElementById("timelineCount")
-    .innerText=data.length;
+        <div class="card-badge">
 
-    const timeline =
-    document.getElementById("timeline");
+            精选
 
-    timeline.innerHTML="";
+        </div>
 
-    data.forEach(item=>{
+        <div class="card-info">
 
-        timeline.innerHTML += `
+            <h2>
 
-        <div class="timeline-item">
+                ${photo.title || "墩墩"}
 
-            <div class="timeline-date">
-
-                ${item.event_date}
-
-            </div>
-
-            <h3>
-
-                ${item.title}
-
-            </h3>
+            </h2>
 
             <p>
 
-                ${item.content || ""}
+                Dundun Digital Museum Collection
 
             </p>
 
         </div>
 
-        `;
+        <div class="card-image">
+
+            <img
+                src="${photo.image_url}"
+                alt="${photo.title || ""}"
+            >
+
+        </div>
+
+    </div>
+
+    `;
+
+});
+
+createDots(data.length);
+
+setupCarousel();
+```
+
+}
+
+function createDots(count){
+
+```
+const dots =
+document.getElementById("galleryDots");
+
+if(!dots) return;
+
+dots.innerHTML = "";
+
+for(let i=0;i<count;i++){
+
+    dots.innerHTML += `
+    <span class="dot ${i===0 ? "active" : ""}"></span>
+    `;
+}
+```
+
+}
+
+function setupCarousel(){
+
+```
+const gallery =
+document.getElementById("gallery");
+
+const dots =
+document.querySelectorAll(".dot");
+
+if(!gallery || !dots.length) return;
+
+gallery.addEventListener("scroll",()=>{
+
+    const cardWidth =
+    gallery.querySelector(".showcase-card")
+    ?.offsetWidth || 1;
+
+    const index =
+    Math.round(
+        gallery.scrollLeft /
+        (cardWidth + 28)
+    );
+
+    dots.forEach(dot=>{
+
+        dot.classList.remove("active");
 
     });
+
+    if(dots[index]){
+
+        dots[index]
+        .classList
+        .add("active");
+
+    }
+
+});
+```
+
+}
+
+async function loadTimeline() {
+
+```
+const { data, error } =
+await supabaseClient
+.from("timeline")
+.select("*")
+.order("event_date",{
+    ascending:false
+});
+
+if(error){
+
+    console.error(error);
+    return;
+}
+
+document
+.getElementById("timelineCount")
+.innerText = data.length;
+
+const timeline =
+document.getElementById("timeline");
+
+timeline.innerHTML = "";
+
+data.forEach(item=>{
+
+    timeline.innerHTML += `
+
+    <div class="timeline-item">
+
+        <div class="timeline-date">
+
+            ${item.event_date}
+
+        </div>
+
+        <h3>
+
+            ${item.title}
+
+        </h3>
+
+        <p>
+
+            ${item.content || ""}
+
+        </p>
+
+    </div>
+
+    `;
+
+});
+```
 
 }
 
 loadPhotos();
-
 loadTimeline();
