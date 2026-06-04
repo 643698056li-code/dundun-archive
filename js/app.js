@@ -21,119 +21,70 @@ if (photoCount) {
     photoCount.innerText = data.length;
 }
 
-const gallery =
-document.getElementById("gallery");
+const carousel =
+document.getElementById("carousel");
 
-if (!gallery) return;
+if (!carousel) return;
 
-gallery.innerHTML = "";
+carousel.innerHTML = "";
 
-data.forEach((photo) => {
+data.forEach((photo, index) => {
 
-    gallery.innerHTML += `
-
+    const cardHTML = `
     <div class="showcase-card">
-
         <div class="card-badge">
             精选
         </div>
-
-        <div class="card-info">
-
-            <h2>
-                ${photo.title || "墩墩"}
-            </h2>
-
-            <p>
-                Dundun Digital Museum Collection
-            </p>
-
+        <div class="card-content">
+            <div class="card-info">
+                <h2>${photo.title || "墩墩"}</h2>
+                <p>Dundun Digital Museum Collection</p>
+                <div class="card-description">
+                    ${photo.description || "记录每一个精彩瞬间"}
+                </div>
+            </div>
+            <div class="card-image">
+                <img
+                    src="${photo.image_url}"
+                    alt="${photo.title || "Dundun"}"
+                    onerror="this.style.display='none'"
+                >
+            </div>
         </div>
-
-        <div class="card-image">
-
-            <img
-                src="${photo.image_url}"
-                alt="${photo.title || "Dundun"}"
-            >
-
-        </div>
-
     </div>
-
     `;
+
+    carousel.innerHTML += cardHTML;
 });
 
-createDots(data.length);
+totalSlides = data.length;
+
+createIndicators(data.length);
 
 setTimeout(() => {
-    setupCarousel();
+    updateCarousel();
 }, 100);
 ```
 
 }
 
-function createDots(count) {
+function createIndicators(count) {
 
 ```
-const dotsContainer =
-document.getElementById("galleryDots");
+const indicatorsContainer =
+document.getElementById("carouselIndicators");
 
-if (!dotsContainer) return;
+if (!indicatorsContainer) return;
 
-dotsContainer.innerHTML = "";
+indicatorsContainer.innerHTML = "";
 
 for (let i = 0; i < count; i++) {
 
-    const activeClass =
-    i === 0 ? "active" : "";
-
-    dotsContainer.innerHTML += `
-    <span class="dot ${activeClass}"></span>
-    `;
+    const indicator = document.createElement("button");
+    indicator.className = `carousel-indicator ${i === 0 ? 'active' : ''}`;
+    indicator.onclick = () => goToSlide(i);
+    indicatorsContainer.appendChild(indicator);
 }
-```
-
-}
-
-function setupCarousel() {
-
-```
-const gallery =
-document.getElementById("gallery");
-
-if (!gallery) return;
-
-const cards =
-gallery.querySelectorAll(".showcase-card");
-
-if (!cards.length) return;
-
-gallery.addEventListener("scroll", () => {
-
-    const cardWidth =
-    cards[0].offsetWidth;
-
-    const gap = 28;
-
-    const index =
-    Math.round(
-        gallery.scrollLeft /
-        (cardWidth + gap)
-    );
-
-    const dots =
-    document.querySelectorAll(".dot");
-
-    dots.forEach(dot => {
-        dot.classList.remove("active");
-    });
-
-    if (dots[index]) {
-        dots[index].classList.add("active");
-    }
-
-});
 ```
 
 }
