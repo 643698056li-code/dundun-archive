@@ -1,162 +1,113 @@
 async function loadPhotos() {
+    const { data, error } = await supabaseClient
+        .from("photos")
+        .select("*")
+        .order("id", { ascending: false });
 
-```
-const { data, error } =
-await supabaseClient
-.from("photos")
-.select("*")
-.order("id", {
-    ascending: false
-});
+    if (error) {
+        console.error(error);
+        return;
+    }
 
-if (error) {
-    console.error(error);
-    return;
-}
+    const photoCount = document.getElementById("photoCount");
+    if (photoCount) {
+        photoCount.innerText = data.length;
+    }
 
-const photoCount =
-document.getElementById("photoCount");
+    const carousel = document.getElementById("carousel");
+    if (!carousel) return;
 
-if (photoCount) {
-    photoCount.innerText = data.length;
-}
+    carousel.innerHTML = "";
 
-const carousel =
-document.getElementById("carousel");
-
-if (!carousel) return;
-
-carousel.innerHTML = "";
-
-data.forEach((photo, index) => {
-
-    const cardHTML = `
-    <div class="showcase-card">
-        <div class="card-badge">
-            精选
-        </div>
-        <div class="card-content">
-            <div class="card-info">
-                <h2>${photo.title || "墩墩"}</h2>
-                <p>Dundun Digital Museum Collection</p>
-                <div class="card-description">
-                    ${photo.description || "记录每一个精彩瞬间"}
+    data.forEach((photo, index) => {
+        const cardHTML = `
+        <div class="showcase-card">
+            <div class="card-badge">
+                精选
+            </div>
+            <div class="card-content">
+                <div class="card-info">
+                    <h2>${photo.title || "墩墩"}</h2>
+                    <p>Dundun Digital Museum Collection</p>
+                    <div class="card-description">
+                        ${photo.description || "记录每一个精彩瞬间"}
+                    </div>
+                </div>
+                <div class="card-image">
+                    <img
+                        src="${photo.image_url}"
+                        alt="${photo.title || "Dundun"}"
+                        onerror="this.style.display='none'"
+                    >
                 </div>
             </div>
-            <div class="card-image">
-                <img
-                    src="${photo.image_url}"
-                    alt="${photo.title || "Dundun"}"
-                    onerror="this.style.display='none'"
-                >
-            </div>
         </div>
-    </div>
-    `;
+        `;
 
-    carousel.innerHTML += cardHTML;
-});
+        carousel.innerHTML += cardHTML;
+    });
 
-totalSlides = data.length;
+    totalSlides = data.length;
+    createIndicators(data.length);
 
-createIndicators(data.length);
-
-setTimeout(() => {
-    updateCarousel();
-}, 100);
-```
-
+    setTimeout(() => {
+        updateCarousel();
+    }, 100);
 }
 
 function createIndicators(count) {
+    const indicatorsContainer = document.getElementById("carouselIndicators");
+    if (!indicatorsContainer) return;
 
-```
-const indicatorsContainer =
-document.getElementById("carouselIndicators");
+    indicatorsContainer.innerHTML = "";
 
-if (!indicatorsContainer) return;
-
-indicatorsContainer.innerHTML = "";
-
-for (let i = 0; i < count; i++) {
-
-    const indicator = document.createElement("button");
-    indicator.className = `carousel-indicator ${i === 0 ? 'active' : ''}`;
-    indicator.onclick = () => goToSlide(i);
-    indicatorsContainer.appendChild(indicator);
-}
-```
-
+    for (let i = 0; i < count; i++) {
+        const indicator = document.createElement("button");
+        indicator.className = `carousel-indicator ${i === 0 ? 'active' : ''}`;
+        indicator.onclick = () => goToSlide(i);
+        indicatorsContainer.appendChild(indicator);
+    }
 }
 
 async function loadTimeline() {
+    const { data, error } = await supabaseClient
+        .from("timeline")
+        .select("*")
+        .order("event_date", { ascending: false });
 
-```
-const { data, error } =
-await supabaseClient
-.from("timeline")
-.select("*")
-.order("event_date", {
-    ascending: false
-});
+    if (error) {
+        console.error(error);
+        return;
+    }
 
-if (error) {
-    console.error(error);
-    return;
-}
+    const timelineCount = document.getElementById("timelineCount");
+    if (timelineCount) {
+        timelineCount.innerText = data.length;
+    }
 
-const timelineCount =
-document.getElementById("timelineCount");
+    const timeline = document.getElementById("timeline");
+    if (!timeline) return;
 
-if (timelineCount) {
-    timelineCount.innerText = data.length;
-}
+    timeline.innerHTML = "";
 
-const timeline =
-document.getElementById("timeline");
-
-if (!timeline) return;
-
-timeline.innerHTML = "";
-
-data.forEach((item) => {
-
-    timeline.innerHTML += `
-
-    <div class="timeline-item">
-
-        <div class="timeline-date">
-
-            ${item.event_date}
-
+    data.forEach((item) => {
+        timeline.innerHTML += `
+        <div class="timeline-item">
+            <div class="timeline-date">
+                ${item.event_date}
+            </div>
+            <h3>
+                ${item.title}
+            </h3>
+            <p>
+                ${item.content || ""}
+            </p>
         </div>
-
-        <h3>
-
-            ${item.title}
-
-        </h3>
-
-        <p>
-
-            ${item.content || ""}
-
-        </p>
-
-    </div>
-
-    `;
-});
-```
-
+        `;
+    });
 }
 
 window.addEventListener("DOMContentLoaded", () => {
-
-```
-loadPhotos();
-
-loadTimeline();
-```
-
+    loadPhotos();
+    loadTimeline();
 });
