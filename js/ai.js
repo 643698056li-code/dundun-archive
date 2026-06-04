@@ -1,9 +1,54 @@
 let accessToken = null;
 let tokenExpireTime = 0;
 
+const CORS_PROXIES = [
+    'https://api.allorigins.win/get?url=',
+    'https://cors-anywhere.herokuapp.com/',
+    'https://proxy.cors.sh/'
+];
+
+async function fetchWithProxy(url, options = {}, proxyIndex = 0) {
+    if (proxyIndex >= CORS_PROXIES.length) {
+        throw new Error('所有CORS代理都失败了');
+    }
+
+    const proxyUrl = CORS_PROXIES[proxyIndex] + encodeURIComponent(url);
+    
+    try {
+        const response = await fetch(proxyUrl, {
+            ...options,
+            headers: {
+                ...options.headers,
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        });
+
+        if (response.ok) {
+            const contentType = response.headers.get('content-type');
+            
+            if (contentType && contentType.includes('json')) {
+                return await response.json();
+            } else {
+                const text = await response.text();
+                try {
+                    return JSON.parse(text);
+                } catch {
+                    return { contents: text, status: { http_code: response.status } };
+                }
+            }
+        } else {
+            throw new Error(`HTTP错误: ${response.status}`);
+        }
+    } catch (error) {
+        console.warn(`代理 ${proxyIndex + 1} 失败:`, error.message);
+        return fetchWithProxy(url, options, proxyIndex + 1);
+    }
+}
+
 async function getBaiduAccessToken() {
     const now = Date.now();
     if (accessToken && now < tokenExpireTime) {
+        console.log('使用缓存的access token');
         return accessToken;
     }
 
@@ -13,72 +58,63 @@ async function getBaiduAccessToken() {
 
     const tokenUrl = `https://aip.baidubce.com/oauth/2.0/token?grant_type=client_credentials&client_id=${BAIDU_AI_CONFIG.API_KEY}&client_secret=${BAIDU_AI_CONFIG.SECRET_KEY}`;
     
+    console.log('尝试获取百度云access token...');
+    
     try {
-        const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(tokenUrl)}`;
-        const response = await fetch(proxyUrl);
-        const proxyData = await response.json();
+        const proxyData = await fetchWithProxy(tokenUrl);
         
-        if (proxyData.status.http_code === 200 && proxyData.contents) {
-            const data = JSON.parse(proxyData.contents);
-            
+        if (proxyData.access_token) {
+            accessToken = proxyData.access_token;
+            tokenExpireTime = now + ((proxyData.expires_in || 3600) * 1000) - 60000;
+            console.log('成功获取access token');
+            return accessToken;
+        } else if (proxyData.contents) {
+            const data = typeof proxyData.contents === 'string' ? JSON.parse(proxyData.contents) : proxyData.contents;
             if (data.access_token) {
                 accessToken = data.access_token;
-                tokenExpireTime = now + (data.expires_in * 1000) - 60000;
+                tokenExpireTime = now + ((data.expires_in || 3600) * 1000) - 60000;
+                console.log('成功获取access token');
                 return accessToken;
             } else {
-                throw new Error(data.error_description || '获取token失败');
+                throw new Error(data.error_description || data.error || '获取token失败');
             }
         } else {
-            throw new Error('代理请求失败');
+            throw new Error('代理返回格式不正确');
         }
     } catch (error) {
-        console.warn('CORS代理失败，尝试直接请求:', error.message);
-        
-        try {
-            const response = await fetch(tokenUrl, {
-                method: 'POST',
-                mode: 'no-cors'
-            });
-            
-            throw new Error('直接请求也失败');
-        } catch (directError) {
-            console.warn('直接请求也失败，使用本地文案生成');
-            throw new Error('CORS限制');
-        }
+        console.error('获取access token失败:', error.message);
+        throw new Error('CORS限制');
     }
 }
 
 async function analyzeImage(imageBase64) {
     const token = await getBaiduAccessToken();
     
-    const url = `${BAIDU_AI_CONFIG.IMAGE_CAPTION_URL}?access_token=${token}`;
+    const url = `${BAIDU_AI_CONFIG.IMAGE_CAPTION_URL}?access_token=${token}&image=${encodeURIComponent(imageBase64)}`;
+    
+    console.log('开始分析图片...');
     
     try {
-        const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(url)}`;
+        const proxyData = await fetchWithProxy(url, { method: 'POST' });
         
-        const response = await fetch(proxyUrl, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded'
-            },
-            body: `image=${encodeURIComponent(imageBase64)}`
-        });
-
-        const proxyData = await response.json();
-        
-        if (proxyData.status.http_code === 200 && proxyData.contents) {
-            const data = JSON.parse(proxyData.contents);
-            
+        if (proxyData.result) {
+            const keywords = proxyData.result.slice(0, 5).map(item => item.keyword);
+            console.log('图片分析成功，关键词:', keywords);
+            return keywords;
+        } else if (proxyData.contents) {
+            const data = typeof proxyData.contents === 'string' ? JSON.parse(proxyData.contents) : proxyData.contents;
             if (data.result) {
-                return data.result.slice(0, 5).map(item => item.keyword);
+                const keywords = data.result.slice(0, 5).map(item => item.keyword);
+                console.log('图片分析成功，关键词:', keywords);
+                return keywords;
             } else {
-                throw new Error(data.error_msg || '图片分析失败');
+                throw new Error(data.error_msg || data.error || '图片分析失败');
             }
         } else {
-            throw new Error('代理返回异常');
+            throw new Error('图片分析API返回格式不正确');
         }
     } catch (error) {
-        console.warn('图片分析API调用失败:', error.message);
+        console.error('图片分析API调用失败:', error.message);
         throw error;
     }
 }
@@ -88,12 +124,12 @@ async function generateCaption(imageBase64) {
         const keywords = await analyzeImage(imageBase64);
         const prompt = `根据以下图片内容关键词，为一只可爱的柯基犬"墩墩"生成一段温馨有趣的文案。关键词：${keywords.join('、')}。要求：语气亲切可爱，适合社交媒体分享，字数在50-100字之间。`;
         
+        console.log('开始生成文案...');
+        
         const token = await getBaiduAccessToken();
         const url = `${BAIDU_AI_CONFIG.TEXT_GENERATION_URL}?access_token=${token}`;
         
-        const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(url)}`;
-        
-        const response = await fetch(proxyUrl, {
+        const proxyData = await fetchWithProxy(url, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -104,19 +140,26 @@ async function generateCaption(imageBase64) {
                 max_tokens: 200
             })
         });
-
-        const proxyData = await response.json();
         
-        if (proxyData.status.http_code === 200 && proxyData.contents) {
-            const data = JSON.parse(proxyData.contents);
+        if (proxyData.result) {
+            console.log('文案生成成功:', proxyData.result);
+            return {
+                caption: proxyData.result,
+                keywords: keywords,
+                source: 'baidu'
+            };
+        } else if (proxyData.contents) {
+            const data = typeof proxyData.contents === 'string' ? JSON.parse(proxyData.contents) : proxyData.contents;
             
             if (data.result) {
+                console.log('文案生成成功:', data.result);
                 return {
                     caption: data.result,
                     keywords: keywords,
                     source: 'baidu'
                 };
             } else {
+                console.warn('文案生成API返回无结果，使用备用文案');
                 return {
                     caption: generateFallbackCaption(keywords),
                     keywords: keywords,
@@ -124,10 +167,10 @@ async function generateCaption(imageBase64) {
                 };
             }
         } else {
-            throw new Error('文案生成API调用失败');
+            throw new Error('文案生成API返回格式不正确');
         }
     } catch (error) {
-        console.warn('百度云API不可用，使用本地文案生成:', error.message);
+        console.error('百度云API不可用，使用本地文案生成:', error.message);
         
         const localKeywords = analyzeImageLocally(imageBase64);
         return {
