@@ -128,6 +128,32 @@ async function addTimeline() {
     alert("发布成功");
 }
 
+async function loadStatsForAdmin() {
+    const { data, error } = await supabaseClient
+        .from("stats")
+        .select("*")
+        .eq("id", 1)
+        .single();
+
+    if (error || !data) {
+        console.log("No stats found");
+        return;
+    }
+
+    if (data.weight) {
+        document.getElementById("heroWeight").value = data.weight;
+    }
+    if (data.age) {
+        document.getElementById("heroAge").value = data.age;
+    }
+    if (data.height) {
+        document.getElementById("heroHeight").value = data.height;
+    }
+    if (data.nickname) {
+        document.getElementById("heroNickname").value = data.nickname;
+    }
+}
+
 async function updateStats() {
     const weight = document.getElementById("heroWeight").value;
     const age = document.getElementById("heroAge").value;
@@ -142,7 +168,8 @@ async function updateStats() {
                 weight: weight,
                 age: age,
                 height: height,
-                nickname: nickname
+                nickname: nickname,
+                updated_at: new Date().toISOString()
             }
         ]);
 
@@ -154,3 +181,7 @@ async function updateStats() {
 
     alert("保存成功");
 }
+
+window.addEventListener("DOMContentLoaded", () => {
+    loadStatsForAdmin();
+});
