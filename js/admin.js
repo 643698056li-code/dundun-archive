@@ -236,7 +236,11 @@ async function generateCaptionWithAI() {
             const base64 = e.target.result.split(',')[1];
             const result = await generateCaption(base64);
             
-            generatedCaptionSpan.innerHTML = `<p><strong>关键词：</strong>${result.keywords.join('、')}</p><p><strong>文案：</strong>${result.caption}</p>`;
+            const sourceText = result.source === 'baidu' ? '🤖 百度AI' : 
+                   result.source === 'fallback' ? '⚠️ 备用文案' : '📝 本地生成';
+const sourceColor = result.source === 'baidu' ? '#4facfe' : 
+                   result.source === 'fallback' ? '#ff9500' : '#86868b';
+generatedCaptionSpan.innerHTML = `<p style="color:${sourceColor}; font-weight:600; margin-bottom:8px;">${sourceText}</p><p><strong>关键词：</strong>${result.keywords.join('、')}</p><p><strong>文案：</strong>${result.caption}</p>`;
             
             const descriptionInput = document.getElementById("photoDescription");
             if (descriptionInput && !descriptionInput.value) {
