@@ -174,37 +174,74 @@ margin-bottom:70px;
 /* ================= STATS ================= */
 
 .stats{
-
 display:grid;
-
-grid-template-columns:
-repeat(
-auto-fit,
-minmax(250px,1fr)
-);
-
-gap:40px;
+grid-template-columns:repeat(auto-fit, minmax(280px,1fr));
+gap:32px;
+max-width:1200px;
+margin:0 auto;
 }
 
 .stat{
-
+background:white;
+border-radius:24px;
+padding:48px 32px;
 text-align:center;
+box-shadow:0 4px 20px rgba(0,0,0,0.04);
+transition:all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.stat:hover{
+transform:translateY(-4px);
+box-shadow:0 12px 40px rgba(0,0,0,0.08);
+}
+
+.stat-icon{
+width:64px;
+height:64px;
+margin:0 auto 24px;
+border-radius:20px;
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:28px;
+}
+
+.stat-icon.photos{
+background:linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.stat-icon.events{
+background:linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+}
+
+.stat-icon.weight{
+background:linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+}
+
+.stat-icon.age{
+background:linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
 }
 
 .stat-number{
-
-font-size:72px;
-
+font-size:56px;
 font-weight:700;
+letter-spacing:-2px;
+color:#1d1d1f;
+margin-bottom:8px;
+}
 
-letter-spacing:-3px;
+.stat-unit{
+font-size:24px;
+font-weight:400;
+color:#6e6e73;
+margin-left:4px;
 }
 
 .stat-label{
-
-font-size:20px;
-
-color:#6e6e73;
+font-size:17px;
+color:#86868b;
+font-weight:400;
+letter-spacing:0.5px;
 }
 
 /* ================= CAROUSEL ================= */
@@ -750,55 +787,27 @@ Archive Statistics
 <div class="stats">
 
 <div class="stat">
-
-<div
-id="photoCount"
-class="stat-number">
-
-0
-
-</div>
-
-<div class="stat-label">
-
-Photos
-
-</div>
-
+<div class="stat-icon photos">📷</div>
+<div id="photoCount" class="stat-number">0</div>
+<div class="stat-label">Photos</div>
 </div>
 
 <div class="stat">
-
-<div
-id="timelineCount"
-class="stat-number">
-
-0
-
-</div>
-
-<div class="stat-label">
-
-Events
-
-</div>
-
+<div class="stat-icon events">📅</div>
+<div id="timelineCount" class="stat-number">0</div>
+<div class="stat-label">Events</div>
 </div>
 
 <div class="stat">
-
-<div class="stat-number">
-
-14
-
+<div class="stat-icon weight">⚖️</div>
+<div class="stat-number"><span id="heroWeight">14</span><span class="stat-unit">kg</span></div>
+<div class="stat-label">Weight</div>
 </div>
 
-<div class="stat-label">
-
-kg Hero Corgi
-
-</div>
-
+<div class="stat">
+<div class="stat-icon age">🎂</div>
+<div class="stat-number"><span id="heroAge">3</span><span class="stat-unit">yrs</span></div>
+<div class="stat-label">Age</div>
 </div>
 
 </div>

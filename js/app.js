@@ -107,7 +107,35 @@ async function loadTimeline() {
     });
 }
 
+async function loadStats() {
+    const { data, error } = await supabaseClient
+        .from("stats")
+        .select("*")
+        .eq("id", 1)
+        .single();
+
+    if (error || !data) {
+        console.log("No stats found, using defaults");
+        return;
+    }
+
+    if (data.weight) {
+        const weightElement = document.getElementById("heroWeight");
+        if (weightElement) {
+            weightElement.innerText = data.weight;
+        }
+    }
+
+    if (data.age) {
+        const ageElement = document.getElementById("heroAge");
+        if (ageElement) {
+            ageElement.innerText = data.age;
+        }
+    }
+}
+
 window.addEventListener("DOMContentLoaded", () => {
     loadPhotos();
     loadTimeline();
+    loadStats();
 });

@@ -127,3 +127,30 @@ async function addTimeline() {
 
     alert("发布成功");
 }
+
+async function updateStats() {
+    const weight = document.getElementById("heroWeight").value;
+    const age = document.getElementById("heroAge").value;
+    const height = document.getElementById("heroHeight").value;
+    const nickname = document.getElementById("heroNickname").value;
+
+    const { error } = await supabaseClient
+        .from("stats")
+        .upsert([
+            {
+                id: 1,
+                weight: weight,
+                age: age,
+                height: height,
+                nickname: nickname
+            }
+        ]);
+
+    if (error) {
+        console.error(error);
+        alert(error.message);
+        return;
+    }
+
+    alert("保存成功");
+}
